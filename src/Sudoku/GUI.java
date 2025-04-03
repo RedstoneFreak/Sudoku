@@ -10,9 +10,12 @@ public class GUI extends JFrame {
     JPanel pan;
     boolean Menu = true;
     int padding = 50;
-    public GUI(int width, int height){
+    int FX1, FY1, FX2, FY2, Fh, Fw;
+    public int[][] feld;
+    public GUI(int width, int height, int[][] feld){
         this.width = width;
         this.height = height;
+        this.feld = feld;
         create();
     }
 
@@ -36,28 +39,59 @@ public class GUI extends JFrame {
     }
 
     private void reloadVars(){
-        pan.setBounds(0,0,getWidth(),getHeight()-32);
+        pan.setBounds(0,0,getWidth(),getHeight());
+        FX1 = padding;
+        FY1 = padding;
+        FX2 = getWidth()*2/3-padding;
+        if (FX2 >= (getHeight()-padding)){
+            FY2 = getHeight()-padding;
+        }else{
+            FY2 = FX2;
+        }
+        Fh = FY2-FY1;
+        Fw = FX2-FX1;
     }
 
     private class PrivJPanel extends JPanel{
         Graphics2D g;
-        int h;
+        //private JLabel[][] labels;
+
         public void paintComponent(Graphics graphics){
             super.paintComponent(graphics);
             g = (Graphics2D) graphics;
             reloadVars();
             //Draw
-            if ((getWidth()*2/3-padding) >= (getHeight()-padding)){
-                h = getHeight()-padding;
-            }else{
-                h = getWidth()*2/3-padding;
-            }
-            drawQuadrat(padding, padding, getWidth()*2/3-padding, h, 3);
-            drawrasta(padding, padding, getWidth()*2/3-padding, h, 3);
 
-            drawrasta(padding, padding, (getWidth()*2/3+padding)/3, (h+padding*2)/3, 1);
-            drawrasta((getWidth()*2/3)/3, padding, (getWidth()*2/3)*2/3, (h+padding*2)/3, 1);
-            drawrasta((getWidth()*2/3)*2/3, padding, (getWidth()*2/3), (h+padding*2)/3, 1);
+            /*int newSize = Math.min(getWidth(), getHeight()) / 10;
+            int oldSize = 0;
+            if (newSize != oldSize) {
+                for (int i = 0; i < labels.length; i++) {
+                    for (int u = 0; u < labels[i].length; u++){
+                        labels[i][u].setFont(new Font("Arial", Font.PLAIN, newSize));
+                    }
+                }
+                oldSize = newSize;
+            }*/
+
+
+
+            drawQuadrat(FX1, FY1, FX2, FY2, 3);
+            drawrasta(FX1, FY1, FX2, FY2, 3);
+
+            //Reihe1
+            drawrasta(FX1, FY1, Fw/3+FX1, Fh/3+FY1, 1);
+            drawrasta(Fw/3+FX1, FY1, Fw*2/3+FX1, Fh/3+FY1, 1);
+            drawrasta(Fw*2/3+FX1, FY1, Fw+FX1, Fh/3+FY1, 1);
+            //Reíhe2
+            drawrasta(FX1, Fh/3+FY1, Fw/3+FX1, Fh*2/3+FY1, 1);
+            drawrasta(Fw/3+FX1, Fh/3+FY1, Fw*2/3+FX1, Fh*2/3+FY1, 1);
+            drawrasta(Fw*2/3+FX1, Fh/3+FY1, Fw+FX1, Fh*2/3+FY1, 1);
+            //Reíhe3
+            drawrasta(FX1, Fh*2/3+FY1, Fw/3+FX1, Fh+FY1, 1);
+            drawrasta(Fw/3+FX1, Fh*2/3+FY1, Fw*2/3+FX1, Fh+FY1, 1);
+            drawrasta(Fw*2/3+FX1, Fh*2/3+FY1, Fw+FX1, Fh+FY1, 1);
+
+
 
 
         }
@@ -88,6 +122,7 @@ public class GUI extends JFrame {
         public void mousePressed(MouseEvent e) {
             if (e.getButton() == 1){
                 //linke maus taste
+
             }
         }
 
