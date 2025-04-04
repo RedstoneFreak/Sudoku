@@ -47,6 +47,7 @@ public class GUI extends JFrame {
             FY2 = getHeight()-padding;
         }else{
             FY2 = FX2;
+            FX2 = FY2;
         }
         Fh = FY2-FY1;
         Fw = FX2-FX1;
