@@ -18,12 +18,20 @@ public class GUI extends JFrame {
     JLabel[][] labels;
     boolean drawn = false;
     int activerow, activecol;
+    boolean Active = false;
     public GUI(int width, int height, int[][] feld){
         this.width = width;
         this.height = height;
         this.feld = feld;
         labels = new JLabel[9][9];
         create();
+    }
+
+    public void fieldset(int row, int col, int num){
+        feld[col][row] = num;
+    }
+    public int[][] fieldgive(){
+        return feld;
     }
 
     private void create(){
@@ -51,8 +59,9 @@ public class GUI extends JFrame {
         drawn = true;
         NewSudoku();
 
-        addMouseListener(new InputHandler());      //sets the MouseListener
         addKeyListener(new InputHandler());
+        addMouseListener(new InputHandler());      //sets the MouseListener
+
     }
 
     private void reloadVars(){
@@ -147,7 +156,7 @@ public class GUI extends JFrame {
     }
 
     private class InputHandler implements MouseListener, KeyListener{
-        boolean Active;
+        ActionHandler a = new ActionHandler();
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -157,7 +166,12 @@ public class GUI extends JFrame {
         public void mousePressed(MouseEvent e) {
             if (e.getButton() == 1){
                 //linke maus taste
-
+                if ((FY1+31) <= e.getY() && (FY2+31)  >= e.getY() && FX1 <= e.getX() && (FX1+Fw) >= e.getX()) {
+                    activerow = (((e.getY()-32)-FX1)/(Fh/9));
+                    activecol = (((e.getX()-7)-FY1)/(Fw/9));
+                    Active = true;
+                    System.out.println("Clock");
+                }
             }
         }
 
@@ -187,7 +201,107 @@ public class GUI extends JFrame {
 
         @Override
         public void keyReleased(KeyEvent e) {
+            //System.out.println("Tast");
+            if (Active){
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD1 || e.getKeyCode() == KeyEvent.VK_1){
+                    a.Eingabe(activerow, activecol, 1);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD2 || e.getKeyCode() == KeyEvent.VK_2){
+                    a.Eingabe(activerow, activecol, 2);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD3 || e.getKeyCode() == KeyEvent.VK_3){
+                    a.Eingabe(activerow, activecol, 3);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD4 || e.getKeyCode() == KeyEvent.VK_4){
+                    a.Eingabe(activerow, activecol, 4);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD5 || e.getKeyCode() == KeyEvent.VK_5){
+                    a.Eingabe(activerow, activecol, 5);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD6 || e.getKeyCode() == KeyEvent.VK_6){
+                    a.Eingabe(activerow, activecol, 6);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD7 || e.getKeyCode() == KeyEvent.VK_7){
+                    a.Eingabe(activerow, activecol, 7);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD8 || e.getKeyCode() == KeyEvent.VK_8){
+                    a.Eingabe(activerow, activecol, 8);
+                    Active = false;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_NUMPAD9 || e.getKeyCode() == KeyEvent.VK_9){
+                    a.Eingabe(activerow, activecol, 9);
+                    Active = false;
+                }
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                NewSudoku();
+            }
+        }
+    }
 
+    public class ActionHandler{
+        int row, col, num, Krow, Kcol;
+        boolean moeglich;
+        public ActionHandler(){}
+
+        public void Eingabe(int row, int col, int num){
+            this.row = row;
+            this.col = col;
+            this.num = num;
+            moeglich = true;
+
+            if(num >= 1 && num <= 9) {
+                for (int i = 0; i < feld.length; i++) {
+                    if(feld[i][col] == num) {
+                        moeglich = false;
+                    }
+                }
+                if(moeglich) {
+                    for (int u = 0; u < feld[row].length; u++) {
+                        if(feld[row][u] == num) {
+                            moeglich = false;
+                        }
+                    }
+
+                    if(moeglich) {
+                        if(row >= 0 && row <= 2) {
+                            Krow = 0;
+                        }else if(row >= 3 && row <= 5) {
+                            Krow = 3;
+                        }else if(row >= 6 && row <= 8) {
+                            Krow = 6;
+                        }
+                        if(col >= 0 && col <= 2) {
+                            Kcol = 0;
+                        }else if(col >= 3 && col <= 5) {
+                            Kcol = 3;
+                        }else if(col >= 6 && col <= 8) {
+                            Kcol = 6;
+                        }
+
+                        for (int i = Krow; i < Krow + 3; i++) {
+                            for (int u = Kcol; u < Kcol + 3; u++) {
+                                if(feld[i][u] == num) {
+                                    moeglich = false;
+                                }
+                            }
+                        }
+                    }
+                }
+                if(moeglich) {
+                    feld[row][col] = num;
+                    labels[row][col].setVerticalAlignment(SwingConstants.CENTER);
+                    labels[row][col].setHorizontalAlignment(SwingConstants.CENTER);
+                    labels[row][col].setText("" + feld[row][col] + "");
+                }
+            }
         }
     }
 
