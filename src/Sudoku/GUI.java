@@ -170,7 +170,6 @@ public class GUI extends JFrame {
                     activerow = (((e.getY()-32)-FX1)/(Fh/9));
                     activecol = (((e.getX()-7)-FY1)/(Fw/9));
                     Active = true;
-                    System.out.println("Clock");
                 }
             }
         }
@@ -201,7 +200,6 @@ public class GUI extends JFrame {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            //System.out.println("Tast");
             if (Active){
                 if (e.getKeyCode() == KeyEvent.VK_NUMPAD1 || e.getKeyCode() == KeyEvent.VK_1){
                     a.Eingabe(activerow, activecol, 1);
