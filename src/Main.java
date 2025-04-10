@@ -1,6 +1,10 @@
+import Sudoku.Generator.SUDOKU;
+
 public class Main {
+
     public static void main(String[] args) {
-        int[][] feld = {
+
+        /*int[][] feld = {
                 { 6, 4, 0, 2, 9, 8, 5, 0, 7 },
                 { 0, 5, 2, 1, 0, 6, 9, 8, 4 },
                 { 7, 9, 8, 0, 4, 5, 0, 6, 2 },
@@ -10,7 +14,7 @@ public class Main {
                 { 8, 3, 0, 7, 6, 9, 2, 4, 1 },
                 { 4, 1, 9, 8, 0, 3, 7, 5, 6 },
                 { 2, 0, 7, 4, 5, 1, 3, 0, 8 }
-        };
-        new Sudoku.GUI(800,600, feld);
+        };*/
+        new Sudoku.GUI(800,600);
     }
 }

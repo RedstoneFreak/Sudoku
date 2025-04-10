@@ -1,5 +1,7 @@
 package Sudoku;
 
+import Sudoku.Generator.SUDOKU;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,16 +16,27 @@ public class GUI extends JFrame {
     int padding = 50;
     int FX1, FY1, FX2, FY2, Fh, Fw;
     int fontSize = 1;
+    int newSize = 1;
     public int[][] feld;
+    public int[][] Loesung;
     JLabel[][] labels;
+    //JLabel textfeld;
+    JLabel[] button;
     boolean drawn = false;
     int activerow, activecol;
     boolean Active = false;
-    public GUI(int width, int height, int[][] feld){
+    SUDOKU s = new SUDOKU();
+    public GUI(int width, int height){
         this.width = width;
         this.height = height;
-        this.feld = feld;
         labels = new JLabel[9][9];
+        button = new JLabel[3];
+        feld = new int[9][9];
+        /*textfeld = new JLabel();
+        textfeld.setVerticalAlignment(SwingConstants.CENTER);
+        textfeld.setHorizontalAlignment(SwingConstants.CENTER);
+        textfeld.setVisible(true);
+        textfeld.setOpaque(false);*/
         create();
     }
 
@@ -48,6 +61,7 @@ public class GUI extends JFrame {
 
 
         pan = new PrivJPanel();                  //creates the JPanel
+        //pan.setBackground(Color.LIGHT_GRAY);
         pan.setBounds(0,0,getWidth(),getHeight());//sets the Bounds of the JPanel
         add(pan);                                       //adds the pan to the JFrame as a Component
 
@@ -56,8 +70,15 @@ public class GUI extends JFrame {
                 labels[i][u] = new JLabel();
             }
         }
+        for (int i = 0; i < button.length; i++){
+            button[i] = new JLabel();
+            button[i].setVerticalAlignment(SwingConstants.CENTER);
+            button[i].setHorizontalAlignment(SwingConstants.CENTER);
+        }
+        button[0].setText("Einfach");
+        button[1].setText("Normal");
+        button[2].setText("Schwer");
         drawn = true;
-        NewSudoku();
 
         addKeyListener(new InputHandler());
         addMouseListener(new InputHandler());      //sets the MouseListener
@@ -117,8 +138,25 @@ public class GUI extends JFrame {
                         add(labels[i][u]);
                     }
                 }
+                button[0].setLocation(getWidth()*2/3, getHeight()/4);
+                button[0].setSize(getWidth()-getWidth()*2/3-padding,getHeight()/2/3-(padding/2));
+                button[1].setLocation(getWidth()*2/3,(getHeight()/4)+getHeight()/2/3);
+                button[1].setSize(getWidth()-getWidth()*2/3-padding,getHeight()/2/3-(padding/2));
+                button[2].setLocation(getWidth()*2/3,(getHeight()/4)+getHeight()/2*2/3);
+                button[2].setSize(getWidth()-getWidth()*2/3-padding,getHeight()/2/3-(padding/2));
+                for (int i = 0; i < button.length; i++){
+                    newSize = (int) (fontSize/1.3);
+                    button[i].setFont(new Font("Arial", Font.BOLD, newSize));
+                    button[i].setVisible(true);
+                    button[i].setBackground(Color.GRAY);
+                    button[i].setOpaque(true);
+                    add(button[i]);
+                }
             }
-
+            /*textfeld.setFont(new Font("Arial", Font.BOLD, fontSize/2));
+            textfeld.setLocation(getWidth()*2/3-padding,padding/2);
+            textfeld.setSize((getWidth())-(getWidth()*2/3),getHeight()/3-padding);
+            add(textfeld);*/
 
 
         }
@@ -143,13 +181,24 @@ public class GUI extends JFrame {
         dispose();
     }
 
-    public void NewSudoku(){
+    public void NewSudoku(String difficulty){
+        //feld = new int[9][9];
+        Loesung = new int[9][9];
+        for (int i = 0;i < feld.length; i++){
+            for (int u = 0; u < feld[i].length; u++){
+                feld[i][u] = 0;
+            }
+        }
+        feld = s.SudokufeldErstellen(difficulty);
+        Loesung = s.LoesungAusgeben();
         for (int i = 0; i < feld.length; i++) {
             for (int u = 0; u < feld[i].length; u++) {
                 if (feld[i][u] != 0) {
                     labels[i][u].setVerticalAlignment(SwingConstants.CENTER);
                     labels[i][u].setHorizontalAlignment(SwingConstants.CENTER);
                     labels[i][u].setText("" + feld[i][u] + "");
+                }else {
+                    labels[i][u].setText("");
                 }
             }
         }
@@ -171,6 +220,16 @@ public class GUI extends JFrame {
                     activecol = (((e.getX()-7)-FY1)/(Fw/9));
                     Active = true;
                 }
+                if (e.getX() >= (getWidth()*2/3) && e.getX() <= (getWidth()-padding) && e.getY()-32 >=  getHeight()/4 && e.getY()-32 <= getHeight()/4+getHeight()/2/3-(padding/2)){
+                    NewSudoku("leicht");
+                }
+                if (e.getX() >= (getWidth()*2/3) && e.getX() <= (getWidth()-padding ) && e.getY()-32 >=  getHeight()/4+getHeight()/2/3 && e.getY()-32 <= getHeight()/4+getHeight()/2/3+getHeight()/2/3-(padding/2)){
+                    NewSudoku("mittel");
+                }
+                if (e.getX() >= (getWidth()*2/3) && e.getX() <= (getWidth()-padding) && e.getY()-32 >=  getHeight()/4+getHeight()/2*2/3 && e.getY()-32 <= getHeight()/4+getHeight()/2*2/3+getHeight()/2/3-(padding/2)){
+                    NewSudoku("schwer");
+                }
+                //textfeld.setText("");
             }
         }
 
@@ -239,23 +298,32 @@ public class GUI extends JFrame {
                 }
             }
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
-                NewSudoku();
+                killFrame();
             }
         }
     }
 
     public class ActionHandler{
-        int row, col, num, Krow, Kcol;
-        boolean moeglich;
+        int row, col, num; /*Krow, Kcol*/
+        //boolean moeglich;
         public ActionHandler(){}
 
         public void Eingabe(int row, int col, int num){
             this.row = row;
             this.col = col;
             this.num = num;
-            moeglich = true;
 
-            if(num >= 1 && num <= 9) {
+            if (feld[row][col] == 0){
+                if(Loesung[row][col] == num){
+                    feld[row][col] = num;
+                    labels[row][col].setVerticalAlignment(SwingConstants.CENTER);
+                    labels[row][col].setHorizontalAlignment(SwingConstants.CENTER);
+                    labels[row][col].setText("" + feld[row][col] + "");
+                }
+            }
+            //moeglich = true;
+
+            /*if(num >= 1 && num <= 9) {
                 for (int i = 0; i < feld.length; i++) {
                     if(feld[i][col] == num) {
                         moeglich = false;
@@ -298,8 +366,10 @@ public class GUI extends JFrame {
                     labels[row][col].setVerticalAlignment(SwingConstants.CENTER);
                     labels[row][col].setHorizontalAlignment(SwingConstants.CENTER);
                     labels[row][col].setText("" + feld[row][col] + "");
+                }else {
+                    //textfeld.setText("Diese Zahl passt hier nicht!");
                 }
-            }
+            }*/
         }
     }
 
