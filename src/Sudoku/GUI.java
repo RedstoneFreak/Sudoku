@@ -12,7 +12,7 @@ import java.awt.event.MouseListener;
 public class GUI extends JFrame {
     int width,height;
     JPanel pan;
-    boolean Menu = true;
+    //boolean Menu = true;
     int padding = 50;
     int FX1, FY1, FX2, FY2, Fh, Fw;
     int fontSize = 1;
@@ -40,12 +40,12 @@ public class GUI extends JFrame {
         create();
     }
 
-    public void fieldset(int row, int col, int num){
+    /*public void fieldset(int row, int col, int num){
         feld[col][row] = num;
     }
     public int[][] fieldgive(){
         return feld;
-    }
+    }*/
 
     private void create(){
         //the Window
@@ -144,13 +144,13 @@ public class GUI extends JFrame {
                 button[1].setSize(getWidth()-getWidth()*2/3-padding,getHeight()/2/3-(padding/2));
                 button[2].setLocation(getWidth()*2/3,(getHeight()/4)+getHeight()/2*2/3);
                 button[2].setSize(getWidth()-getWidth()*2/3-padding,getHeight()/2/3-(padding/2));
-                for (int i = 0; i < button.length; i++){
-                    newSize = (int) (fontSize/1.3);
-                    button[i].setFont(new Font("Arial", Font.BOLD, newSize));
-                    button[i].setVisible(true);
-                    button[i].setBackground(Color.GRAY);
-                    button[i].setOpaque(true);
-                    add(button[i]);
+                for (JLabel jLabel : button) {
+                    newSize = (int) (fontSize / 1.3);
+                    jLabel.setFont(new Font("Arial", Font.BOLD, newSize));
+                    jLabel.setVisible(true);
+                    jLabel.setBackground(Color.GRAY);
+                    jLabel.setOpaque(true);
+                    add(jLabel);
                 }
             }
             /*textfeld.setFont(new Font("Arial", Font.BOLD, fontSize/2));

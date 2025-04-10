@@ -1,4 +1,3 @@
-import Sudoku.Generator.SUDOKU;
 
 public class Main {
 
